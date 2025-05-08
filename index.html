@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simple Chat App</title>
+  <title>Suhba Chat</title>
 
   <!-- Tailwind CSS (via CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,10 +20,18 @@
 </head>
 
 <body class="bg-black text-white flex items-center justify-center min-h-screen">
+<!-- Username Prompt -->
+<div id="namePrompt" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+  <div class="bg-gray-800 p-6 rounded-lg text-center space-y-4">
+    <h2 class="text-2xl font-bold">Enter your name</h2>
+    <input type="text" id="usernameInput" class="p-3 rounded-lg bg-gray-700 text-white w-full" placeholder="Your name..." />
+    <button onclick="saveName()" class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-semibold">Join Chat</button>
+  </div>
+</div>
 
   <!-- Chat App Container -->
   <div class="chat-container bg-gray-900 p-6 rounded-lg shadow-lg">
-    <h2 class="text-3xl font-semibold text-center mb-6">Chat App</h2>
+    <h2 class="text-3xl font-semibold text-center mb-6">Suhba Chat</h2>
 
     <!-- Messages Area -->
     <div id="messages" class="message-container bg-gray-800 p-4 rounded-lg overflow-y-auto mb-4">
@@ -44,7 +52,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
   <script>
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBjzZbIR59C-_xFvV043rd2PXIM6IA5Kv4",
       authDomain: "suhbachat.firebaseapp.com",
@@ -54,45 +61,88 @@
       appId: "1:1013393597517:web:3d4862bb677a0d358e6804",
       measurementId: "G-8242K26MKS"
     };
-
-    // Initialize Firebase
+  
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
+  
     const msgInput = document.getElementById("msgInput");
     const sendBtn = document.getElementById("sendBtn");
     const messagesDiv = document.getElementById("messages");
-
-    // Sending a message to Firestore
-    sendBtn.onclick = () => {
+  
+    // Prompt user for name
+    const namePrompt = document.getElementById("namePrompt");
+    const usernameInput = document.getElementById("usernameInput");
+  
+    function saveName() {
+      const name = usernameInput.value.trim();
+      if (name !== "") {
+        localStorage.setItem("suhbaUsername", name);
+        namePrompt.style.display = "none";
+        msgInput.focus();
+      }
+    }
+  
+    window.onload = () => {
+      const name = localStorage.getItem("suhbaUsername");
+      if (!name) {
+        namePrompt.style.display = "flex";
+      } else {
+        namePrompt.style.display = "none";
+        msgInput.focus();
+      }
+    };
+  
+    function sendMessage() {
       const text = msgInput.value.trim();
-      if (text !== "") {
+      const sender = localStorage.getItem("suhbaUsername");
+      if (text !== "" && sender) {
         db.collection("messages").add({
           text: text,
+          sender: sender,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
           msgInput.value = "";
+          msgInput.focus();
         }).catch(error => {
           console.error("Error sending message:", error);
         });
       }
-    };
-
+    }
+  
+    sendBtn.onclick = sendMessage;
+  
+    msgInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  
     // Real-time message listener
     db.collection("messages")
       .orderBy("timestamp")
       .onSnapshot(snapshot => {
         messagesDiv.innerHTML = "";
         snapshot.forEach(doc => {
-          const msg = doc.data().text;
-          const div = document.createElement("div");
-          div.textContent = msg;
-          div.classList.add("mb-2", "text-white");
-          messagesDiv.appendChild(div);
+          const data = doc.data();
+          const msgDiv = document.createElement("div");
+          msgDiv.classList.add("mb-3");
+  
+          const sender = document.createElement("div");
+          sender.textContent = data.sender || "Anonymous";
+          sender.classList.add("text-sm", "text-blue-400", "font-semibold");
+  
+          const message = document.createElement("div");
+          message.textContent = data.text;
+          message.classList.add("text-white");
+  
+          msgDiv.appendChild(sender);
+          msgDiv.appendChild(message);
+          messagesDiv.appendChild(msgDiv);
         });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       });
   </script>
-
+  
 </body>
 </html>
