@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Chat App</title>
+
+  <!-- Tailwind CSS (via CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .chat-container {
+      max-width: 800px;
+      width: 100%;
+    }
+    .message-container {
+      height: 60vh;
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white flex items-center justify-center min-h-screen">
+
+  <!-- Chat App Container -->
+  <div class="chat-container bg-gray-900 p-6 rounded-lg shadow-lg">
+    <h2 class="text-3xl font-semibold text-center mb-6">Chat App</h2>
+
+    <!-- Messages Area -->
+    <div id="messages" class="message-container bg-gray-800 p-4 rounded-lg overflow-y-auto mb-4">
+      <!-- Messages will appear here -->
+    </div>
+
+    <!-- Input Area -->
+    <div class="flex items-center space-x-2">
+      <input type="text" id="msgInput" class="flex-grow p-3 bg-gray-700 text-white rounded-lg" placeholder="Type a message..." />
+      <button id="sendBtn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold">
+        Send
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjzZbIR59C-_xFvV043rd2PXIM6IA5Kv4",
+      authDomain: "suhbachat.firebaseapp.com",
+      projectId: "suhbachat",
+      storageBucket: "suhbachat.firebasestorage.app",
+      messagingSenderId: "1013393597517",
+      appId: "1:1013393597517:web:3d4862bb677a0d358e6804",
+      measurementId: "G-8242K26MKS"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const msgInput = document.getElementById("msgInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const messagesDiv = document.getElementById("messages");
+
+    // Sending a message to Firestore
+    sendBtn.onclick = () => {
+      const text = msgInput.value.trim();
+      if (text !== "") {
+        db.collection("messages").add({
+          text: text,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+          msgInput.value = "";
+        }).catch(error => {
+          console.error("Error sending message:", error);
+        });
+      }
+    };
+
+    // Real-time message listener
+    db.collection("messages")
+      .orderBy("timestamp")
+      .onSnapshot(snapshot => {
+        messagesDiv.innerHTML = "";
+        snapshot.forEach(doc => {
+          const msg = doc.data().text;
+          const div = document.createElement("div");
+          div.textContent = msg;
+          div.classList.add("mb-2", "text-white");
+          messagesDiv.appendChild(div);
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      });
+  </script>
+
+</body>
+</html>
