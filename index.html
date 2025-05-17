@@ -28,6 +28,7 @@
     <button onclick="saveName()" class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-semibold">Join Chat</button>
   </div>
 </div>
+<div id="onlineUsers" class="text-sm text-gray-400 mb-2"></div>
 
   <!-- Chat App Container -->
   <div class="chat-container bg-gray-900 p-6 rounded-lg shadow-lg">
@@ -61,6 +62,9 @@
       appId: "1:1013393597517:web:3d4862bb677a0d358e6804",
       measurementId: "G-8242K26MKS"
     };
+    const usersRef = db.collection("users");
+let currentUser = null;
+
   
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -73,24 +77,28 @@
     const namePrompt = document.getElementById("namePrompt");
     const usernameInput = document.getElementById("usernameInput");
   
-    function saveName() {
-      const name = usernameInput.value.trim();
-      if (name !== "") {
-        localStorage.setItem("suhbaUsername", name);
-        namePrompt.style.display = "none";
-        msgInput.focus();
-      }
-    }
-  
-    window.onload = () => {
-      const name = localStorage.getItem("suhbaUsername");
-      if (!name) {
-        namePrompt.style.display = "flex";
-      } else {
-        namePrompt.style.display = "none";
-        msgInput.focus();
-      }
-    };
+    async function saveName() {
+  const name = usernameInput.value.trim();
+  if (!name) return;
+
+  const userDoc = await usersRef.doc(name).get();
+  if (userDoc.exists) {
+    alert("Username already taken! Try something else.");
+    return;
+  }
+
+  currentUser = name;
+  localStorage.setItem("suhbaUsername", name);
+  namePrompt.style.display = "none";
+
+  // Save user online status + timestamp
+  await usersRef.doc(name).set({
+    lastActive: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  startUserHeartbeat(); // keep updating timestamp
+}
+
   
     function sendMessage() {
       const text = msgInput.value.trim();
@@ -142,6 +150,37 @@
         });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       });
+
+    // Real-time online users display
+usersRef.onSnapshot(snapshot => {
+  const now = Date.now();
+  const onlineHTML = [];
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const name = doc.id;
+    const lastActive = data.lastActive?.toDate();
+
+    if (lastActive && now - lastActive.getTime() <= 2 * 60 * 1000) { // 2 mins
+      const timeString = lastActive.toLocaleTimeString();
+      onlineHTML.push(`<span class="mr-4">🟢 ${name} <span class="text-xs">(${timeString})</span></span>`);
+    }
+  });
+
+  document.getElementById("onlineUsers").innerHTML = onlineHTML.join(" ");
+});
+
+    
+    function startUserHeartbeat() {
+  setInterval(() => {
+    if (currentUser) {
+      usersRef.doc(currentUser).update({
+        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  }, 30000); // every 30 seconds
+}
+
   </script>
   
 </body>
