@@ -12,12 +12,22 @@
             --primary-dark: #3367D6;
             --secondary: #34A853;
             --accent: #EA4335;
-            --background: #F5F7FA;
-            --surface: #FFFFFF;
-            --text-primary: #202124;
-            --text-secondary: #5F6368;
-            --border: #DADCE0;
-            --shadow: rgba(0, 0, 0, 0.1);
+            --background: #181a20;
+            --surface: #23262f;
+            --surface-alt: #22242e;
+            --header-bg: #23262f;
+            --header-shadow: 0 6px 16px rgba(66,133,244,0.07);
+            --text-primary: #f1f1f1;
+            --text-secondary: #b1b4c3;
+            --border: #303346;
+            --shadow: rgba(0, 0, 0, 0.25);
+            --bubble-sent: linear-gradient(120deg, #4285F4, #3367D6);
+            --bubble-received: #23262f;
+            --input-bg: #22242e;
+            --input-border: #303346;
+            --input-text: #f1f1f1;
+            --sidebar-width: 260px;
+            --header-height: 60px;
         }
 
         * {
@@ -27,319 +37,409 @@
             font-family: 'Roboto', sans-serif;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
+            min-height: 100vh;
+            height: 100vh;
             background-color: var(--background);
             color: var(--text-primary);
-            height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--background);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(66, 133, 244, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            margin-top: 20px;
-            font-size: 18px;
-            color: var(--text-secondary);
-        }
-
-        /* Header */
-        .app-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px var(--shadow);
-        }
-
-        .app-title {
-            font-size: 24px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-
-        .app-title .material-icons {
-            margin-right: 10px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            margin-right: 12px;
-            background-color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--primary);
-            font-weight: 500;
-            font-size: 16px;
-        }
-
-        .user-name {
-            font-weight: 500;
-            margin-right: 16px;
-        }
-
-        .logout-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.2s;
-        }
-
-        .logout-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .logout-btn .material-icons {
-            font-size: 18px;
-            margin-right: 6px;
-        }
-
-        /* Main Content */
-        .app-container {
-            display: flex;
-            flex: 1;
             overflow: hidden;
         }
 
-        /* Sidebar */
+        .app-header {
+            background: var(--header-bg);
+            color: var(--primary);
+            padding: 0 2rem;
+            height: var(--header-height);
+            min-height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--header-shadow);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        .app-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .app-title .material-icons {
+            font-size: 1.7rem;
+            background: var(--surface-alt);
+            border-radius: 50%;
+            padding: 0.25rem;
+            color: var(--primary);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .user-avatar {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-name {
+            font-weight: 500;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            color: var(--text-primary);
+        }
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .logout-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+        .logout-btn .material-icons {
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+            height: calc(100vh - var(--header-height));
+        }
         .sidebar {
-            width: 320px;
-            background-color: var(--surface);
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background: var(--surface-alt);
             border-right: 1px solid var(--border);
+            box-shadow: 1px 0 12px var(--shadow);
             display: flex;
             flex-direction: column;
+            height: 100%;
+            min-height: 0;
         }
-
         .search-container {
-            padding: 16px;
+            padding: 1.1rem 1rem 0.6rem 1rem;
             border-bottom: 1px solid var(--border);
+            background: var(--surface);
         }
-
         .search-box {
             position: relative;
         }
-
         .search-box .material-icons {
             position: absolute;
-            left: 12px;
+            left: 1.1rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
         }
-
         .search-input {
             width: 100%;
-            padding: 12px 12px 12px 40px;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            font-size: 14px;
+            padding: 0.75rem 0.75rem 0.75rem 2.2rem;
+            border: 1px solid var(--input-border);
+            border-radius: 1.5rem;
+            font-size: 1rem;
             outline: none;
             transition: border-color 0.2s;
+            background: var(--input-bg);
+            color: var(--input-text);
         }
-
         .search-input:focus {
             border-color: var(--primary);
         }
-
         .user-list {
             flex: 1;
             overflow-y: auto;
+            min-height: 0;
+            padding: 0.6rem 0 0.3rem 0;
         }
-
         .user-item {
-            padding: 16px;
+            padding: 0.85rem 1.5rem;
             display: flex;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.18s;
+            border-radius: 0.8rem;
+            margin: 0.18rem 0.6rem;
+            gap: 0.5rem;
+            color: var(--text-primary);
         }
-
-        .user-item:hover {
-            background-color: rgba(66, 133, 244, 0.05);
+        .user-item:hover,
+        .user-item.shortcut-active {
+            background-color: #26304d;
+            box-shadow: 0 2px 8px var(--shadow);
         }
-
         .user-item.active {
-            background-color: rgba(66, 133, 244, 0.1);
+            background-color: #314580;
+            box-shadow: 0 4px 14px var(--shadow);
+            font-weight: 600;
         }
-
         .user-item-avatar {
-            width: 48px;
-            height: 48px;
+            width: 2rem;
+            height: 2rem;
             border-radius: 50%;
-            margin-right: 16px;
-            background-color: var(--primary);
+            margin-right: 0.7rem;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: 500;
-            font-size: 18px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px var(--shadow);
         }
-
         .user-item-info {
             flex: 1;
         }
-
         .user-item-name {
             font-weight: 500;
-            margin-bottom: 4px;
+            margin-bottom: 0.1rem;
+            font-size: 1rem;
+            color: var(--text-primary);
         }
-
         .user-item-status {
-            font-size: 12px;
-            color: var(--text-secondary);
+            font-size: 0.8rem;
+            color: var(--secondary);
         }
-
         .online-indicator {
-            width: 12px;
-            height: 12px;
+            width: 0.65rem;
+            height: 0.65rem;
             border-radius: 50%;
             background-color: var(--secondary);
-            margin-left: 8px;
+            margin-left: 0.6rem;
         }
 
-        /* Chat Area */
         .chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            min-height: 0;
+            background: var(--surface-alt);
         }
-
         .chat-header {
-            padding: 16px 24px;
+            padding: 1rem 2rem;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
+            background: var(--surface);
+            min-height: 3.5rem;
         }
-
         .chat-header-avatar {
-            width: 40px;
-            height: 40px;
+            width: 2rem;
+            height: 2rem;
             border-radius: 50%;
-            margin-right: 16px;
-            background-color: var(--primary);
+            margin-right: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: 500;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px var(--shadow);
         }
-
         .chat-header-info {
             flex: 1;
         }
-
         .chat-header-name {
-            font-weight: 500;
-            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.1rem;
         }
-
         .chat-header-status {
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 0.95rem;
+            color: var(--secondary);
         }
-
         .chat-messages {
             flex: 1;
-            padding: 24px;
+            padding: 1.2rem 2rem 0.6rem 2rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            min-height: 0;
+            gap: 0.6rem;
+            background: var(--surface-alt);
         }
-
         .message {
-            margin-bottom: 16px;
-            max-width: 70%;
+            margin-bottom: 0.5rem;
+            max-width: 75%;
             display: flex;
             flex-direction: column;
         }
-
         .message.sent {
             align-self: flex-end;
             align-items: flex-end;
         }
-
         .message.received {
             align-self: flex-start;
             align-items: flex-start;
         }
-
         .message-bubble {
-            padding: 12px 16px;
-            border-radius: 18px;
-            box-shadow: 0 1px 2px var(--shadow);
-            word-wrap: break-word;
+            padding: 0.8rem 1.1rem;
+            border-radius: 1.2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            font-size: 1rem;
+            word-break: break-word;
         }
-
         .message.sent .message-bubble {
-            background-color: var(--primary);
+            background: var(--bubble-sent);
             color: white;
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 0.5rem;
         }
-
         .message.received .message-bubble {
-            background-color: var(--surface);
-            border-bottom-left-radius: 4px;
+            background: var(--bubble-received);
+            border-bottom-left-radius: 0.5rem;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
         }
-
         .message-time {
-            font-size: 12px;
+            font-size: 0.8rem;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 0.3rem;
+            margin-left: 0.2rem;
+        }
+        .message.sent .message-time {
+            color: #b6cdfc;
         }
 
-        .message.sent .message-time {
-            color: rgba(255, 255, 255, 0.7);
+        .chat-input-container {
+            background: var(--surface);
+            box-shadow: 0 -2px 8px var(--shadow);
+            border-top: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem 1.1rem;
+            border: 1px solid var(--input-border);
+            border-radius: 1.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            background: var(--input-bg);
+            color: var(--input-text);
+            margin-right: 1rem;
+        }
+        .chat-input:focus {
+            border-color: var(--primary);
+        }
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 2.7rem;
+            height: 2.7rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: background 0.2s;
+        }
+        .send-btn:hover {
+            background: var(--primary-dark);
+        }
+        .send-btn .material-icons {
+            font-size: 1.4rem;
+        }
+
+        .registration-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 1.5rem;
+            background: var(--background);
+        }
+        .registration-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            box-shadow: 0 6px 24px var(--shadow);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 410px;
+            text-align: center;
+        }
+        .registration-logo {
+            font-size: 2.7rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .registration-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        .registration-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+            font-size: 1rem;
+        }
+        .username-input, .password-input {
+            width: 100%;
+            padding: 0.8rem 1.1rem;
+            border: 1px solid var(--input-border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            background: var(--input-bg);
+            color: var(--input-text);
+        }
+        .username-input:focus, .password-input:focus {
+            border-color: var(--primary);
+        }
+        .register-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.9rem 1.4rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            margin-top: 0.2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        .register-btn:hover {
+            background: var(--primary-dark);
+        }
+        .error-message {
+            color: var(--accent);
+            margin-top: 1rem;
+            font-size: 1rem;
+            min-height: 1.4rem;
         }
 
         .empty-chat {
@@ -349,196 +449,69 @@
             justify-content: center;
             align-items: center;
             color: var(--text-secondary);
+            text-align: center;
         }
-
         .empty-chat .material-icons {
-            font-size: 64px;
-            margin-bottom: 16px;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
             color: var(--border);
         }
 
-        .chat-input-container {
-            padding: 16px 24px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            margin-right: 16px;
-        }
-
-        .chat-input:focus {
-            border-color: var(--primary);
-        }
-
-        .send-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px var(--shadow);
-            transition: background-color 0.2s;
-        }
-
-        .send-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .send-btn .material-icons {
-            font-size: 24px;
-        }
-
-        /* Registration Screen */
-        .registration-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 24px;
-        }
-
-        .registration-card {
-            background-color: var(--surface);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px var(--shadow);
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .registration-logo {
-            font-size: 48px;
-            color: var(--primary);
-            margin-bottom: 16px;
-        }
-
-        .registration-title {
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .registration-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-
-        .username-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 16px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .username-input:focus {
-            border-color: var(--primary);
-        }
-
-        .register-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
-
-        .register-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .error-message {
-            color: var(--accent);
-            margin-top: 16px;
-            font-size: 14px;
-        }
-
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: absolute;
-                z-index: 10;
-                height: 100%;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .chat-container {
-                width: 100%;
-            }
-
-            .message {
-                max-width: 85%;
-            }
+        @media (max-width: 1100px) {
+            :root { --sidebar-width: 210px; }
+            .app-header { padding: 0 1rem; }
+            .chat-header, .chat-input-container, .chat-messages { padding-left: 1rem; padding-right: 1rem; }
+        }
+        @media (max-width: 900px) {
+            .app-header { padding: 0 0.3rem; }
+            .sidebar { width: 100%; position: absolute; z-index: 10; height: 100%; transform: translateX(-100%); transition: transform 0.3s ease;}
+            .sidebar.open {transform: translateX(0);}
+            .app-container { flex-direction: column; }
+            .chat-header, .chat-input-container, .chat-messages { padding-left: 0.3rem; padding-right: 0.3rem; }
+            .chat-messages { padding-top: 0.7rem; padding-bottom: 0.4rem; }
+        }
+        @media (max-width: 600px) {
+            :root { --sidebar-width: 100vw;}
+            .registration-card { padding: 1rem; }
+            .app-header { height: 48px; min-height: 48px; font-size: 1.1rem;}
+            .chat-header, .chat-input-container, .chat-messages { padding-left: 0.15rem; padding-right: 0.15rem; }
+            .chat-header-avatar, .user-avatar, .user-item-avatar { width: 1.5rem; height: 1.5rem; font-size: 0.9rem;}
+            .chat-header, .chat-input-container { min-height: 2.2rem;}
         }
 
-        /* Toast Notification */
         .toast {
             position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #323232;
+            background: #323232;
             color: white;
-            padding: 16px 24px;
-            border-radius: 4px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 0.4rem;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 1000;
+            font-size: 1rem;
         }
-
         .toast.show {
             opacity: 1;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="spinner"></div>
-        <div class="loading-text">Loading...</div>
-    </div>
-
-    <!-- Registration Screen -->
+    <!-- Registration/Login Screen -->
     <div class="registration-container" id="registrationContainer" style="display: none;">
         <div class="registration-card">
             <div class="registration-logo">
                 <i class="material-icons">chat</i>
             </div>
             <h1 class="registration-title">Welcome to FireChat</h1>
-            <p class="registration-subtitle">Enter a username to start chatting</p>
-            <input type="text" class="username-input" id="usernameInput" placeholder="Choose a username" maxlength="20">
-            <button class="register-btn" id="registerBtn">Join Chat</button>
+            <p class="registration-subtitle">Enter your username and password to register or login</p>
+            <input type="text" class="username-input" id="usernameInput" placeholder="Username" maxlength="20" autocomplete="username">
+            <input type="password" class="password-input" id="passwordInput" placeholder="Password" maxlength="20" autocomplete="current-password">
+            <button class="register-btn" id="registerBtn">Login / Register</button>
             <div class="error-message" id="errorMessage"></div>
         </div>
     </div>
@@ -627,10 +600,10 @@
         const db = firebase.firestore();
 
         // DOM Elements
-        const loadingScreen = document.getElementById('loadingScreen');
         const registrationContainer = document.getElementById('registrationContainer');
         const mainApp = document.getElementById('mainApp');
         const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
         const registerBtn = document.getElementById('registerBtn');
         const errorMessage = document.getElementById('errorMessage');
         const logoutBtn = document.getElementById('logoutBtn');
@@ -653,116 +626,136 @@
         let currentChatUser = null;
         let chatUnsubscribe = null;
 
-        // Show loading screen
-        loadingScreen.classList.remove('hidden');
+        // Responsive sidebar toggle
+        function toggleSidebar(open) {
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar) return;
+            if (window.innerWidth <= 900) {
+                if (open) sidebar.classList.add('open');
+                else sidebar.classList.remove('open');
+            } else {
+                sidebar.classList.remove('open');
+            }
+        }
+        window.addEventListener('resize', function() { toggleSidebar(false); });
 
-        // Check if user is already registered
-        window.addEventListener('DOMContentLoaded', () => {
+        // Check if user is already registered (auto-login)
+        window.addEventListener('DOMContentLoaded', async () => {
             const savedUsername = localStorage.getItem('firechat_username');
             const savedUserId = localStorage.getItem('firechat_userid');
-            
-            if (savedUsername && savedUserId) {
-                // User is already registered
-                loadingScreen.classList.remove('hidden');
-                
-                // Verify user exists in Firestore
-                db.collection('users').doc(savedUserId).get()
-                    .then(doc => {
-                        if (doc.exists) {
+            const savedPassword = localStorage.getItem('firechat_password');
+
+            if (savedUsername && savedUserId && savedPassword) {
+                // Try to verify credentials from Firestore
+                try {
+                    const userDoc = await db.collection('users').doc(savedUserId).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        if (userData.username === savedUsername && userData.password === savedPassword) {
                             currentUser = {
                                 id: savedUserId,
-                                username: savedUsername
+                                username: savedUsername,
+                                password: savedPassword
                             };
                             setupUserUI(currentUser);
                             loadUsers();
-                            
-                            setTimeout(() => {
-                                loadingScreen.classList.add('hidden');
-                                registrationContainer.style.display = 'none';
-                                mainApp.style.display = 'flex';
-                            }, 1000);
-                        } else {
-                            // User doesn't exist in Firestore, show registration
-                            loadingScreen.classList.add('hidden');
-                            registrationContainer.style.display = 'flex';
+                            registrationContainer.style.display = 'none';
+                            mainApp.style.display = 'flex';
+                            toggleSidebar(false);
+                            return;
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error checking user:', error);
-                        loadingScreen.classList.add('hidden');
-                        registrationContainer.style.display = 'flex';
-                    });
-            } else {
-                // Show registration screen
-                loadingScreen.classList.add('hidden');
-                registrationContainer.style.display = 'flex';
+                    }
+                } catch (error) {
+                    // fallback to login/register
+                }
             }
+            // Show login/register screen
+            registrationContainer.style.display = 'flex';
+            mainApp.style.display = 'none';
         });
 
-        // Register user
+        // Register/Login user
         registerBtn.addEventListener('click', async () => {
             const username = usernameInput.value.trim();
-            
+            const password = passwordInput.value.trim();
+
             if (!username) {
                 errorMessage.textContent = 'Please enter a username';
                 return;
             }
-            
             if (username.length < 3) {
                 errorMessage.textContent = 'Username must be at least 3 characters';
                 return;
             }
-            
-            // Show loading screen
-            loadingScreen.classList.remove('hidden');
+            if (!password) {
+                errorMessage.textContent = 'Please enter a password';
+                return;
+            }
+            if (password.length < 3) {
+                errorMessage.textContent = 'Password must be at least 3 characters';
+                return;
+            }
+
             errorMessage.textContent = '';
-            
+
             try {
-                // Check if username already exists
+                // Check if username exists
                 const usersRef = db.collection('users');
                 const snapshot = await usersRef.where('username', '==', username).get();
-                
+
                 if (!snapshot.empty) {
-                    errorMessage.textContent = 'Username already taken';
-                    loadingScreen.classList.add('hidden');
-                    return;
-                }
-                
-                // Create new user
-                const newUserRef = usersRef.doc();
-                const userId = newUserRef.id;
-                
-                await newUserRef.set({
-                    username: username,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Save user data to localStorage
-                localStorage.setItem('firechat_username', username);
-                localStorage.setItem('firechat_userid', userId);
-                
-                // Set current user
-                currentUser = {
-                    id: userId,
-                    username: username
-                };
-                
-                // Setup UI
-                setupUserUI(currentUser);
-                loadUsers();
-                
-                // Hide loading and show main app
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
+                    // User exists, check password
+                    const doc = snapshot.docs[0];
+                    const userData = doc.data();
+                    if (userData.password === password) {
+                        // Login success
+                        localStorage.setItem('firechat_username', username);
+                        localStorage.setItem('firechat_userid', doc.id);
+                        localStorage.setItem('firechat_password', password);
+
+                        currentUser = {
+                            id: doc.id,
+                            username: username,
+                            password: password
+                        };
+                        setupUserUI(currentUser);
+                        loadUsers();
+                        registrationContainer.style.display = 'none';
+                        mainApp.style.display = 'flex';
+                        toggleSidebar(false);
+                    } else {
+                        errorMessage.textContent = 'Incorrect password';
+                    }
+                } else {
+                    // Not exists, register new user
+                    const newUserRef = usersRef.doc();
+                    const userId = newUserRef.id;
+                    await newUserRef.set({
+                        username: username,
+                        password: password, // plain text (not secure)
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    localStorage.setItem('firechat_username', username);
+                    localStorage.setItem('firechat_userid', userId);
+                    localStorage.setItem('firechat_password', password);
+
+                    currentUser = {
+                        id: userId,
+                        username: username,
+                        password: password
+                    };
+
+                    setupUserUI(currentUser);
+                    loadUsers();
                     registrationContainer.style.display = 'none';
                     mainApp.style.display = 'flex';
-                }, 1000);
-                
+                    toggleSidebar(false);
+                }
             } catch (error) {
-                console.error('Error registering user:', error);
-                errorMessage.textContent = 'Error creating account. Please try again.';
-                loadingScreen.classList.add('hidden');
+                console.error('Error registering/logging in:', error);
+                errorMessage.textContent = 'Error. Please try again.';
             }
         });
 
@@ -770,23 +763,23 @@
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('firechat_username');
             localStorage.removeItem('firechat_userid');
+            localStorage.removeItem('firechat_password');
             currentUser = null;
             currentChatUser = null;
-            
             if (chatUnsubscribe) {
                 chatUnsubscribe();
                 chatUnsubscribe = null;
             }
-            
+
             registrationContainer.style.display = 'flex';
             mainApp.style.display = 'none';
             usernameInput.value = '';
+            passwordInput.value = '';
             errorMessage.textContent = '';
         });
 
         // Setup user UI
         function setupUserUI(user) {
-            // Set user avatar with first letter of username
             userAvatar.textContent = user.username.charAt(0).toUpperCase();
             userName.textContent = user.username;
         }
@@ -794,25 +787,18 @@
         // Load users
         async function loadUsers() {
             userList.innerHTML = '';
-            
             try {
                 const usersSnapshot = await db.collection('users').get();
-                
                 usersSnapshot.forEach(doc => {
                     const userData = doc.data();
-                    
-                    // Skip current user
                     if (doc.id === currentUser.id) return;
-                    
                     const userItem = document.createElement('div');
                     userItem.className = 'user-item';
                     userItem.dataset.uid = doc.id;
-                    
-                    // Create avatar with first letter of username
                     const userAvatar = document.createElement('div');
                     userAvatar.className = 'user-item-avatar';
                     userAvatar.textContent = userData.username.charAt(0).toUpperCase();
-                    
+
                     userItem.innerHTML = `
                         <div class="user-item-info">
                             <div class="user-item-name">${userData.username}</div>
@@ -820,26 +806,20 @@
                         </div>
                         <div class="online-indicator"></div>
                     `;
-                    
-                    // Insert avatar at the beginning
                     userItem.insertBefore(userAvatar, userItem.firstChild);
-                    
+
                     userItem.addEventListener('click', () => {
-                        // Remove active class from all users
                         document.querySelectorAll('.user-item').forEach(item => {
                             item.classList.remove('active');
                         });
-                        
-                        // Add active class to clicked user
                         userItem.classList.add('active');
-                        
-                        // Setup chat with this user
                         setupChat({
                             id: doc.id,
                             username: userData.username
                         });
+                        toggleSidebar(false);
                     });
-                    
+
                     userList.appendChild(userItem);
                 });
             } catch (error) {
@@ -851,7 +831,6 @@
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             const userItems = document.querySelectorAll('.user-item');
-            
             userItems.forEach(item => {
                 const userName = item.querySelector('.user-item-name').textContent.toLowerCase();
                 if (userName.includes(searchTerm)) {
@@ -865,43 +844,24 @@
         // Setup chat with a user
         function setupChat(user) {
             currentChatUser = user;
-            
-            // Update chat header
             chatHeaderAvatar.textContent = user.username.charAt(0).toUpperCase();
             chatHeaderName.textContent = user.username;
             chatHeader.style.display = 'flex';
-            
-            // Show chat input
             chatInputContainer.style.display = 'flex';
-            
-            // Hide empty chat
             emptyChat.style.display = 'none';
-            
-            // Clear previous messages
             chatMessages.innerHTML = '';
-            
-            // Unsubscribe from previous chat
-            if (chatUnsubscribe) {
-                chatUnsubscribe();
-            }
-            
-            // Create a unique chat ID
+            if (chatUnsubscribe) chatUnsubscribe();
             const chatId = [currentUser.id, user.id].sort().join('_');
-            
-            // Load messages
             chatUnsubscribe = db.collection('chats')
                 .doc(chatId)
                 .collection('messages')
                 .orderBy('timestamp')
                 .onSnapshot(snapshot => {
                     chatMessages.innerHTML = '';
-                    
                     snapshot.forEach(doc => {
                         const message = doc.data();
                         addMessageToUI(message);
                     });
-                    
-                    // Scroll to bottom
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 });
         }
@@ -910,14 +870,11 @@
         function addMessageToUI(message) {
             const messageEl = document.createElement('div');
             messageEl.className = `message ${message.senderId === currentUser.id ? 'sent' : 'received'}`;
-            
             const time = message.timestamp ? message.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-            
             messageEl.innerHTML = `
                 <div class="message-bubble">${message.text}</div>
                 <div class="message-time">${time}</div>
             `;
-            
             chatMessages.appendChild(messageEl);
         }
 
@@ -925,11 +882,7 @@
         function sendMessage() {
             const text = messageInput.value.trim();
             if (!text || !currentChatUser) return;
-            
-            // Create a unique chat ID
             const chatId = [currentUser.id, currentChatUser.id].sort().join('_');
-            
-            // Add message to Firestore
             db.collection('chats')
                 .doc(chatId)
                 .collection('messages')
@@ -961,11 +914,21 @@
         function showToast(message) {
             toast.textContent = message;
             toast.classList.add('show');
-            
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
         }
+
+        // Touch sidebar for mobile
+        let startX = 0;
+        document.body.addEventListener('touchstart', function(e) {
+            if(e.touches[0].clientX < 40) startX = e.touches[0].clientX;
+        });
+        document.body.addEventListener('touchend', function(e) {
+            if(window.innerWidth <= 900) {
+                if(e.changedTouches[0].clientX - startX > 60) toggleSidebar(true);
+            }
+        });
     </script>
 </body>
 </html>
